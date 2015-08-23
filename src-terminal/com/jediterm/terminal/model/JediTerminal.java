@@ -121,8 +121,9 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
                                final int length) {
     myTerminalTextBuffer.lock();
     try {
+      int prevCurY = myCursorY;
       wrapLines();
-      //scrollY();
+      scrollY(prevCurY);
 
       if (length != 0) {
         System.out.println("Write c (" +  myCursorX + "," + myCursorY + ": " + String.valueOf(chosenBuffer));
@@ -157,8 +158,9 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
   private void doWriteString(String string) {
     myTerminalTextBuffer.lock();
     try {
+      int prevCurY = myCursorY;
       wrapLines();
-      //scrollY();
+      scrollY(prevCurY);
 
       System.out.println("Write str: " + string);
 
@@ -176,8 +178,9 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
     while (off < length) {
       int amountInLine = Math.min(distanceToLineEnd(), length - off);
       writeString(string.substring(off, off + amountInLine));
+      int prevCurY = myCursorY;
       wrapLines();
-      //scrollY();
+      scrollY(prevCurY);
       off += amountInLine;
     }
   }
