@@ -126,7 +126,6 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
       scrollY(prevCurY);
 
       if (length != 0) {
-        System.out.println("Write c (" +  myCursorX + "," + myCursorY + ": " + String.valueOf(chosenBuffer));
         myTerminalTextBuffer.writeBytes(myCursorX, myCursorY, chosenBuffer, start, length);
       }
 
@@ -162,8 +161,6 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
       wrapLines();
       scrollY(prevCurY);
 
-      System.out.println("Write str: " + string);
-
       myTerminalTextBuffer.writeString(myCursorX, myCursorY, string);
       myCursorX += string.length();
       finishText();
@@ -189,9 +186,7 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
   public void scrollY(int previousCursorY) {
     myTerminalTextBuffer.lock();
     try {
-      System.out.println(">+ " + previousCursorY + " " + myScrollRegionBottom);
       if (previousCursorY <= myScrollRegionBottom && myCursorY > myScrollRegionBottom) {
-        System.out.println(">> " + myCursorY + " " + myScrollRegionBottom);
         final int dy = myScrollRegionBottom - myCursorY;
         myCursorY = myScrollRegionBottom;
         scrollArea(myScrollRegionTop, scrollingRegionSize(), dy);
@@ -546,7 +541,6 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
   }
 
   private void scrollArea(int scrollRegionTop, int scrollRegionSize, int dy) {
-    System.out.println("Scollarea " + dy);
     myDisplay.scrollArea(scrollRegionTop, scrollRegionSize, dy);
     myTerminalTextBuffer.scrollArea(scrollRegionTop, dy, scrollRegionTop + scrollRegionSize - 1);
   }
@@ -1010,8 +1004,6 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
       Arrays.fill(chars, c);
       final String str = new String(chars);
       
-      System.out.println("FILL");
-
       for (int row = 1; row <= myTerminalHeight; row++) {
         myTerminalTextBuffer.writeString(0, row, str);
       }
