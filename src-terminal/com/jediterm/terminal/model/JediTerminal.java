@@ -109,7 +109,7 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
 
   private void finishText() {
     myDisplay.setCursor(myCursorX, myCursorY);
-    scrollY();
+    //scrollY();
   }
 
   @Override
@@ -122,9 +122,10 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
     myTerminalTextBuffer.lock();
     try {
       wrapLines();
-      scrollY();
+      //scrollY();
 
       if (length != 0) {
+        System.out.println("Write c (" +  myCursorX + "," + myCursorY + ": " + String.valueOf(chosenBuffer));
         myTerminalTextBuffer.writeBytes(myCursorX, myCursorY, chosenBuffer, start, length);
       }
 
@@ -157,7 +158,9 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
     myTerminalTextBuffer.lock();
     try {
       wrapLines();
-      scrollY();
+      //scrollY();
+
+      System.out.println("Write str: " + string);
 
       myTerminalTextBuffer.writeString(myCursorX, myCursorY, string);
       myCursorX += string.length();
@@ -174,16 +177,18 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
       int amountInLine = Math.min(distanceToLineEnd(), length - off);
       writeString(string.substring(off, off + amountInLine));
       wrapLines();
-      scrollY();
+      //scrollY();
       off += amountInLine;
     }
   }
 
 
-  public void scrollY() {
+  public void scrollY(int previousCursorY) {
     myTerminalTextBuffer.lock();
     try {
-      if (myCursorY > myScrollRegionBottom) {
+      System.out.println(">+ " + previousCursorY + " " + myScrollRegionBottom);
+      if (previousCursorY <= myScrollRegionBottom && myCursorY > myScrollRegionBottom) {
+        System.out.println(">> " + myCursorY + " " + myScrollRegionBottom);
         final int dy = myScrollRegionBottom - myCursorY;
         myCursorY = myScrollRegionBottom;
         scrollArea(myScrollRegionTop, scrollingRegionSize(), dy);
@@ -206,7 +211,7 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
   public void newLine() {
     myCursorY += 1;
 
-    scrollY();
+    scrollY(myCursorY - 1);
 
     if (isAutoNewLine()) {
       carriageReturn();
@@ -538,6 +543,7 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
   }
 
   private void scrollArea(int scrollRegionTop, int scrollRegionSize, int dy) {
+    System.out.println("Scollarea " + dy);
     myDisplay.scrollArea(scrollRegionTop, scrollRegionSize, dy);
     myTerminalTextBuffer.scrollArea(scrollRegionTop, dy, scrollRegionTop + scrollRegionSize - 1);
   }
@@ -1000,6 +1006,8 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
       final char[] chars = new char[myTerminalWidth];
       Arrays.fill(chars, c);
       final String str = new String(chars);
+      
+      System.out.println("FILL");
 
       for (int row = 1; row <= myTerminalHeight; row++) {
         myTerminalTextBuffer.writeString(0, row, str);
