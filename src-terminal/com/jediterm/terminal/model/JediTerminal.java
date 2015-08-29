@@ -181,7 +181,6 @@ public class JediTerminal implements Terminal, TerminalMouseListener, TerminalCo
         final int dy = myScrollRegionBottom - myCursorY;
         myCursorY = myScrollRegionBottom;
         scrollArea(myScrollRegionTop, scrollingRegionSize(), dy);
-        myDisplay.setCursor(myCursorX, myCursorY);
       }
       if (myCursorY > myTerminalHeight) {
         myCursorY = myTerminalHeight;
